@@ -1,0 +1,18 @@
+.pokeyLink {
+  text-decoration: none;
+  color: rgb(4, 56, 4);
+}
+.pokeyLink:hover {
+  color: red;
+}
+.pokeyLink:visited {
+  text-decoration: none;
+}
+a {
+  text-decoration: none;
+}
+.inputLabel {
+  font-weight: 500;
+  font-size: 20px;
+  text-transform: uppercase;
+}
