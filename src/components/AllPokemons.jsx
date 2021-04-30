@@ -79,7 +79,7 @@ function AllPokemons() {
         <Grid templateColumns="repeat(3, 1fr)" gap={10} m={10}>
           {pokemonData.map(
             (p, index) =>
-              pokemonData[index].name.includes(filter) && (
+              pokemonData[index].name.startsWith(filter) && (
                 <GridItem key={index + 1} m={10}>
                   <Link
                     className="pokeyLink"
