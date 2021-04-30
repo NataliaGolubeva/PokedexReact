@@ -11,33 +11,49 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import axios from "axios";
+
 function AllPokemons() {
-  const [pokemon, setPokemon] = useState([]);
+  //const [pokemon, setPokemon] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("");
+  const [pokemonData, setPokemonData] = useState([]);
 
-  const getPokemonList = async () => {
-    let pokemonArray = [];
-    for (let i = 1; i <= 151; i++) {
-      pokemonArray.push(await getPokemonData(i));
-    }
-    console.log(pokemonArray);
-    setPokemon(pokemonArray);
-    setLoading(false);
-  };
+  //   const getPokemonList = async () => {
+  //     let pokemonArray = [];
+  //     for (let i = 1; i <= 151; i++) {
+  //       pokemonArray.push(await getPokemonData(i));
+  //     }
+  //     console.log(pokemonArray);
+  //     setPokemon(pokemonArray);
+  //     setLoading(false);
+  //   };
 
-  const getPokemonData = async (id) => {
-    const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`);
-    return res;
-  };
+  //   const getPokemonData = async (id) => {
+  //     const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`);
+  //     return res;
+  //   };
 
-  useEffect(() => {
-    getPokemonList();
-  }, []);
+  //   useEffect(() => {
+  //     getPokemonList();
+  //   }, []);
   const handleSearchChange = (e) => {
     setFilter(e.target.value);
   };
+  useEffect(() => {
+    axios(`https://pokeapi.co/api/v2/pokemon/?limit=50&offset=0`)
+      .then((response) => {
+        setPokemonData(response.data.results);
+        console.log(response.data.results);
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
 
+    return;
+  }, []);
   return (
     <>
       <Box
@@ -63,25 +79,26 @@ function AllPokemons() {
         <Spinner width="50px" height="50px" m={20} />
       ) : (
         <Grid templateColumns="repeat(3, 1fr)" gap={10} m={10}>
-          {pokemon.map((p) => (
+          {pokemonData.map((p, index) => (
             // pokemon.data.name.includes(filter)
-            <GridItem key={p.data.id} m={10}>
+            <GridItem key={index + 1} m={10}>
               <Link
                 className="pokeyLink"
-                href={`/pokemon/${p.data.id}/${slugify(p.data.name, {
+                href={`/pokemon/${index + 1}/${slugify(p.name, {
                   strict: true,
                   lower: true,
                 })} `}
               >
                 <Box background={"white"} pb={10} align="center">
                   <img
-                    src={p.data.sprites.front_default}
+                    src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
+                      index + 1
+                    }.png`}
                     alt="pok"
                     height="200px"
                   ></img>
                   <h1>
-                    {p.data.id}.
-                    {p.data.name.charAt(0).toUpperCase() + p.data.name.slice(1)}
+                    {p.id}.{p.name.charAt(0).toUpperCase() + p.name.slice(1)}
                   </h1>
                 </Box>
               </Link>

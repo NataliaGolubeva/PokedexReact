@@ -11,7 +11,7 @@ function Pokemon() {
     axios(`https://pokeapi.co/api/v2/pokemon/${id}`)
       .then((response) => {
         setPokemon(response.data);
-        console.log(response.data);
+        setImage(response.data.sprites);
       })
       .catch((e) => {
         console.log(e);
@@ -21,19 +21,6 @@ function Pokemon() {
       });
   }, [id]);
 
-  useEffect(() => {
-    axios(`https://pokeapi.co/api/v2/pokemon/${id}`)
-      .then((response) => {
-        setImage(response.data.sprites);
-        console.log(response.data.sprites);
-      })
-      .catch((e) => {
-        console.log(e);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [id]);
   return (
     <Box
       className="pokey"
