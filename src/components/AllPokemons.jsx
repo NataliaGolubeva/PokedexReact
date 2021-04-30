@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import slugify from "react-slugify";
+import { Link } from "react-router-dom";
 import {
   Box,
   Grid,
@@ -7,7 +8,6 @@ import {
   FormControl,
   FormLabel,
   Input,
-  Link,
   Spinner,
 } from "@chakra-ui/react";
 import axios from "axios";
@@ -40,7 +40,7 @@ function AllPokemons() {
     setFilter(e.target.value);
   };
   useEffect(() => {
-    axios(`https://pokeapi.co/api/v2/pokemon/?limit=50&offset=0`)
+    axios(`https://pokeapi.co/api/v2/pokemon/?limit=500&offset=0`)
       .then((response) => {
         setPokemonData(response.data.results);
         console.log(response.data.results);
@@ -51,8 +51,6 @@ function AllPokemons() {
       .finally(() => {
         setLoading(false);
       });
-
-    return;
   }, []);
   return (
     <>
@@ -79,31 +77,34 @@ function AllPokemons() {
         <Spinner width="50px" height="50px" m={20} />
       ) : (
         <Grid templateColumns="repeat(3, 1fr)" gap={10} m={10}>
-          {pokemonData.map((p, index) => (
-            // pokemon.data.name.includes(filter)
-            <GridItem key={index + 1} m={10}>
-              <Link
-                className="pokeyLink"
-                href={`/pokemon/${index + 1}/${slugify(p.name, {
-                  strict: true,
-                  lower: true,
-                })} `}
-              >
-                <Box background={"white"} pb={10} align="center">
-                  <img
-                    src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
-                      index + 1
-                    }.png`}
-                    alt="pok"
-                    height="200px"
-                  ></img>
-                  <h1>
-                    {p.id}.{p.name.charAt(0).toUpperCase() + p.name.slice(1)}
-                  </h1>
-                </Box>
-              </Link>
-            </GridItem>
-          ))}
+          {pokemonData.map(
+            (p, index) =>
+              pokemonData[index].name.includes(filter) && (
+                <GridItem key={index + 1} m={10}>
+                  <Link
+                    className="pokeyLink"
+                    to={`/pokemon/${index + 1}/${slugify(p.name, {
+                      strict: true,
+                      lower: true,
+                    })} `}
+                  >
+                    <Box background={"white"} pb={10} align="center">
+                      <img
+                        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
+                          index + 1
+                        }.png`}
+                        alt="pok"
+                        height="200px"
+                      ></img>
+                      <h1>
+                        {index + 1}.
+                        {p.name.charAt(0).toUpperCase() + p.name.slice(1)}
+                      </h1>
+                    </Box>
+                  </Link>
+                </GridItem>
+              )
+          )}
         </Grid>
       )}
     </>
